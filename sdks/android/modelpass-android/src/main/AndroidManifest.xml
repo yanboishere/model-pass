@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Package visibility (Android 11+): lets ModelPass.isWalletInstalled() see the wallet.
+         Merged into the host app's manifest automatically. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="modelpass" />
+        </intent>
+    </queries>
+
+    <application>
+        <!-- Receives the wallet's redirect (redirect_uri) and hands it to the SDK.
+             The host app must define the placeholder, e.g. in build.gradle.kts:
+               android { defaultConfig { manifestPlaceholders["modelpassRedirectScheme"] = "com.example.chat" } }
+             and use a matching redirectUri such as "com.example.chat:/modelpass/callback". -->
+        <activity
+            android:name="dev.modelpass.sdk.ModelPassRedirectActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${modelpassRedirectScheme}" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

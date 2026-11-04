@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Demo Chat",
+    "slug": "modelpass-demo-chat",
+    "version": "0.1.0",
+    "scheme": "modelpass-demochat",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "dev.modelpass.demochat",
+      "supportsTablet": true,
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["modelpass"],
+        "NSPhotoLibraryUsageDescription": "选择图片发送给 AI（视觉槽位演示）。",
+        "NSAppTransportSecurity": { "NSAllowsLocalNetworking": true }
+      }
+    },
+    "android": {
+      "package": "dev.modelpass.demochat",
+      "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#10B981" }
+    },
+    "web": { "favicon": "./assets/favicon.png" },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      ["expo-image-picker", { "photosPermission": "选择图片发送给 AI（视觉槽位演示）。" }],
+      ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }]
+    ]
+  }
+}

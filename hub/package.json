@@ -1,0 +1,28 @@
+{
+  "name": "@modelpass/hub",
+  "version": "0.1.0",
+  "description": "ModelPass Hub \u2014 authorization server + BYOK model relay (OpenAI / Anthropic compatible).",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "dev-token": "tsx scripts/dev-token.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.6",
+    "@modelpass/core": "*",
+    "hono": "^4.13.16",
+    "qrcode-generator": "^2.0.4"
+  },
+  "devDependencies": {
+    "@modelpass/sdk": "*"
+  }
+}

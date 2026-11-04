@@ -1,0 +1,31 @@
+{
+  "name": "modelpass",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ModelPass — Sign in with your own AI models. A mobile 'CC Switch' + an OAuth-style protocol for BYOK model access.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "hub",
+    "apps/*"
+  ],
+  "scripts": {
+    "hub": "npm run start -w @modelpass/hub",
+    "hub:dev": "npm run dev -w @modelpass/hub",
+    "dev-token": "npm run dev-token -w @modelpass/hub",
+    "wallet": "npm run start -w @modelpass/wallet",
+    "demo": "npm run start -w @modelpass/demo-chat",
+    "test": "npm test -w @modelpass/core && npm test -w @modelpass/sdk && npm test -w @modelpass/hub",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "vectors": "npm run vectors -w @modelpass/core",
+    "icons": "node scripts/gen-icons.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "ModelPass",
+    "slug": "modelpass-wallet",
+    "version": "0.1.0",
+    "scheme": "modelpass",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "dev.modelpass.wallet",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "ModelPass 使用 Face ID 确认对应用的授权。",
+        "NSCameraUsageDescription": "ModelPass 使用相机扫描授权二维码。",
+        "NSAppTransportSecurity": { "NSAllowsLocalNetworking": true }
+      }
+    },
+    "android": {
+      "package": "dev.modelpass.wallet",
+      "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#5B5BF7" }
+    },
+    "web": { "favicon": "./assets/favicon.png" },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      ["expo-camera", { "cameraPermission": "ModelPass 使用相机扫描授权二维码。" }],
+      ["expo-local-authentication", { "faceIDPermission": "ModelPass 使用 Face ID 确认对应用的授权。" }],
+      ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }]
+    ]
+  }
+}

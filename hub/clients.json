@@ -1,0 +1,19 @@
+[
+  {
+    "client_id": "dev.modelpass.demochat",
+    "name": "ModelPass Demo Chat",
+    "verified": true,
+    "icon": "💬",
+    "description": "第三方应用接入示例：一个不需要填写任何 API Key 的聊天应用",
+    "homepage": "https://github.com/yanboishere/modelpass",
+    "redirect_uris": ["modelpass-demochat://modelpass-callback", "exp://*/--/modelpass-callback"]
+  },
+  {
+    "client_id": "dev.modelpass.webdemo",
+    "name": "ModelPass Web Demo",
+    "verified": true,
+    "icon": "🌐",
+    "description": "网页端扫码授权示例",
+    "homepage": "https://github.com/yanboishere/modelpass"
+  }
+]

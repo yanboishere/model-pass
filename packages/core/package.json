@@ -1,0 +1,22 @@
+{
+  "name": "@modelpass/core",
+  "version": "0.1.0",
+  "description": "ModelPass Connect protocol: types, crypto (PKCE, sealing, link flow), routing and provider presets.",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "react-native": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "vectors": "tsx scripts/gen-vectors.ts"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^2.4.0",
+    "@noble/hashes": "^2.4.0"
+  }
+}

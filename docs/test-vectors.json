@@ -1,0 +1,24 @@
+{
+  "description": "ModelPass Connect v0.1 test vectors. All binary values are hex unless suffixed _b64url.",
+  "pkce": {
+    "code_verifier": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+    "code_challenge": "6oZqdX5MOLq_qBJ8vppAnT4fk6AP8UiP9zX8-Rev_9A",
+    "rfc7636_appendix_b": {
+      "code_verifier": "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "code_challenge": "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"
+    }
+  },
+  "link": {
+    "secret_hex": "a0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebf",
+    "secret_b64url": "oKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr8",
+    "link_verifier": "epGG9ky0vAmidbcbFrOGdd_c4c19eItpSWwQIEg3RRU",
+    "link_challenge": "Yeyj5-kJg1bbWBkjtZ3sf9fdpn9fTYgp2l6iNzKIp4U",
+    "user_code": "BCDF-GHJK",
+    "aad": "modelpass/v1/link/BCDFGHJK",
+    "seal_key_hex": "4216f6a23f86992eb43e1d56720399cf66219d9d38b661eb2bc6a9ac114f6806",
+    "nonce_hex": "101112131415161718191a1b",
+    "payload_json": "{\"access_token\":\"mpk_test-vector-token\",\"token_type\":\"Bearer\",\"scope\":\"chat\",\"grant_id\":\"g_testvector000001\",\"sub\":\"u_test\",\"issuer\":\"https://hub.example.com\",\"api_base\":\"https://hub.example.com/v1\",\"api_formats\":[\"openai-chat-completions\"],\"slots\":[{\"id\":\"default\",\"label\":\"默认\"}]}",
+    "sealed_b64url": "EBESExQVFhcYGRoboeMu7s2dXLEkwKWvU9kQ6PqZ-lGdt_WOxA4B4zI9LsMTNFoiwqyQzHOyDgcwHT1RvNodLNtOze_uY_ywl9Ta4p_wyyE6MjX_HqzO4VbJ1YRXoWk4QL9DsUrMFpV11g1wVATwTmYM_bknOuO96866YMc4QrfvZz9adA8Fi8gmRJX1e1mLuWTQZ6I3C95GUlil7g9XPRlPb8e5q4lU39YDHPWoTjAEhQTSdm52tzOKkAixM_4cJOJg26KHt6Rk-pYJz-Bm6zZLvg6Sxlp7XbV-sUS-cJtnNhPkaRxBqcQw5fDAjslMj5Iq-2Eo1Qr2ijMM5_R_yDg4e7f2AlFKVtoFFBhvp_GQ2LR7MB8uELd2tGsaAjhgDQ9e1Ze-W9-lZfFrLvSPjYKM1u35sTFcSQ",
+    "qr_example": "https://hub.example.com/link#v=1&uc=BCDF-GHJK&s=oKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr8"
+  }
+}
