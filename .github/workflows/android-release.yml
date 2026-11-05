@@ -1,7 +1,7 @@
 name: Android APK release
 
 # Builds standalone release APKs of both Expo apps and attaches them to a GitHub Release.
-# Triggered by pushing a tag like v0.1.0, or manually (Actions → Android APK release → Run workflow).
+# Triggered by pushing a tag like v0.1.0 on main's tip, or manually (Actions → Android APK release → Run workflow).
 on:
   push:
     tags: ['v*']
@@ -90,6 +90,8 @@ jobs:
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/* --clobber
-          else
-            gh release create "$TAG" dist/* --title "ModelPass $TAG（Android 演示版）" --notes-file .github/release-notes.md --target "$GITHUB_SHA"
+          elif ! gh release create "$TAG" dist/* --title "ModelPass $TAG（Android 演示版）" --notes-file .github/release-notes.md --target "$GITHUB_SHA"; then
+            # GitHub refuses the workflow token releases/tags on commits whose .github/workflows differ from main's.
+            echo "::error::Could not create release $TAG. If its commit's workflow files differ from main, tag main's tip instead, or create the release by hand (a draft is fine) and re-run this job: it uploads into an existing release."
+            exit 1
           fi
