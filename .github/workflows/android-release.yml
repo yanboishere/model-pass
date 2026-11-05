@@ -43,7 +43,16 @@ jobs:
       - run: npm ci
       - name: Expo prebuild
         run: |
+          # Stamp the tag into the APK (v0.1.2 → versionName 0.1.2, versionCode 102).
+          node -e '
+            const fs = require("fs"), j = JSON.parse(fs.readFileSync("app.json", "utf8"))
+            const v = process.env.TAG.replace(/^v/, ""), [a, b, c] = v.split(/[.-]/).map(Number)
+            const code = [a, b, c].every(Number.isInteger) ? a * 10000 + b * 100 + c : Number(process.env.GITHUB_RUN_NUMBER)
+            j.expo.version = v
+            j.expo.android = { ...j.expo.android, versionCode: code }
+            fs.writeFileSync("app.json", JSON.stringify(j, null, 2))'
           npx expo prebuild --platform android --no-install
+          grep -E "versionCode|versionName" android/app/build.gradle
           # The template's 10 s wrapper download timeout is flaky on CI runners.
           sed -i 's/^networkTimeout=.*/networkTimeout=120000/' android/gradle/wrapper/gradle-wrapper.properties
         working-directory: apps/${{ matrix.app }}

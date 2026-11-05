@@ -188,8 +188,8 @@ function Chat({ session }: { session: ModelPassSession }) {
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions({ options: [...actions.map((a) => a.label), '取消'], cancelButtonIndex: actions.length, destructiveButtonIndex: 2 }, (i) => actions[i]?.run())
     } else {
-      // Android alerts show at most three buttons; tapping outside dismisses.
-      Alert.alert('ModelPass', undefined, actions.map((a) => ({ text: a.label, onPress: a.run })), { cancelable: true })
+      // Android alerts show at most three buttons, the last one first when stacked; tapping outside dismisses.
+      Alert.alert('ModelPass', `已连接 · ${issuerHost}`, [...actions].reverse().map((a) => ({ text: a.label, onPress: a.run })), { cancelable: true })
     }
   }
 

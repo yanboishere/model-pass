@@ -48,12 +48,19 @@ export function Screen({
     </ScrollView>
   )
   // iOS adjusts the scroll insets natively; Android (edge-to-edge) no longer resizes the window for the keyboard.
-  return Platform.OS === 'android' ? (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.bg }}>
-      {scroll}
-    </KeyboardAvoidingView>
-  ) : (
-    scroll
+  return Platform.OS === 'android' ? <AvoidKeyboard style={{ backgroundColor: t.bg }}>{scroll}</AvoidKeyboard> : scroll
+}
+
+/** KeyboardAvoidingView only knows its frame relative to its parent, so offset it by where it sits in the window (below a header, say). */
+function AvoidKeyboard({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) {
+  const ref = React.useRef<React.ComponentRef<typeof View>>(null)
+  const [top, setTop] = React.useState(0)
+  return (
+    <View ref={ref} style={[{ flex: 1 }, style]} onLayout={() => ref.current?.measureInWindow((_x, y) => setTop(y))}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={top} style={{ flex: 1 }}>
+        {children}
+      </KeyboardAvoidingView>
+    </View>
   )
 }
 
