@@ -40,27 +40,6 @@ jobs:
         working-directory: apps/demo-chat
         env: { CI: '1' }
 
-  ios-sdk:
-    name: iOS Swift SDK + live interop
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - run: swift test
-        working-directory: sdks/ios
-      - run: swift build
-      - run: npm ci
-      - name: Start hub
-        run: |
-          MODELPASS_DATA_DIR=$RUNNER_TEMP/hub npm run hub > $RUNNER_TEMP/hub.log 2>&1 &
-          for i in $(seq 1 60); do curl -sf localhost:8787/healthz && break; sleep 1; done
-      - run: swift run Interop
-        working-directory: scripts/interop/swift
-        env: { HUB_URL: 'http://localhost:8787' }
-
   android-sdk:
     name: Android Kotlin SDK + live interop
     runs-on: ubuntu-latest

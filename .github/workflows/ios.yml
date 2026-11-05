@@ -1,0 +1,51 @@
+name: iOS SDK
+
+# macOS runners cost 10x Actions minutes on private repos, so this only runs when it matters.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sdks/ios/**'
+      - 'Package.swift'
+      - 'scripts/interop/**'
+      - 'hub/**'
+      - 'packages/core/**'
+      - 'docs/test-vectors.json'
+      - '.github/workflows/ios.yml'
+  pull_request:
+    paths:
+      - 'sdks/ios/**'
+      - 'Package.swift'
+      - 'scripts/interop/**'
+      - 'hub/**'
+      - 'packages/core/**'
+      - 'docs/test-vectors.json'
+      - '.github/workflows/ios.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios-sdk:
+    name: iOS Swift SDK + live interop
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: swift test
+        working-directory: sdks/ios
+      - run: swift build
+      - run: npm ci
+      - name: Start hub
+        run: |
+          MODELPASS_DATA_DIR=$RUNNER_TEMP/hub npm run hub > $RUNNER_TEMP/hub.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf localhost:8787/healthz && break; sleep 1; done
+      - run: swift run Interop
+        working-directory: scripts/interop/swift
+        env: { HUB_URL: 'http://localhost:8787' }
+

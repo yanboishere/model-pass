@@ -131,11 +131,11 @@ Package.swift         让 iOS 项目可以直接以 SwiftPM 依赖本仓库
 | Hub | 15 项端到端 + 4 项转换单测：同设备授权、码重放、PKCE、未注册回调、OpenAI/Anthropic/Responses 三种上游（流式/非流式/工具调用/thinking 回放）、OAuth 刷新与重新封存、scope、额度、暂停、单独路由、撤销、扫码流程、数据库不含明文 Key | ✅ |
 | JS SDK | 回调 / state / issuer 校验单测，并在 Hub 端到端测试中作为客户端 | ✅ |
 | iOS Swift SDK | `swift test` 81 项 + iOS 模拟器构建 + 对真实 Hub 的互通测试（同设备授权、流式、CJK 响应头、撤销、扫码） | ✅ |
-| Android Kotlin SDK | JVM 单测 53 项 + 对真实 Hub 的 2 项互通测试；Android 库只做了类型检查，AGP 打包由 CI 完成 | ✅ / CI |
+| Android Kotlin SDK | JVM 单测 53 项 + 对真实 Hub 的 2 项互通测试；Android 库（AAR）由 CI 用 AGP 9.5 实际打包通过 | ✅ |
 | 两个 App | 类型检查 + iOS / Android 的 Metro 打包；在 iOS 模拟器中实际跑通：引导、演示模型、跨应用授权、流式对话、一键切换、扫码授权（网页 WebCrypto 解密）、重置钱包会撤销所有授权 | ✅ |
 | 未验证 | Android 真机 / 模拟器上运行（本机没有 Android SDK）；真实厂商 API（仅用模拟上游，但请求格式就是各家的标准 API）；ChatGPT 与 OpenRouter 账户授权的真实账户流程 | ⚠️ |
 
-CI（`.github/workflows/ci.yml`）会跑以上全部自动化测试，包括 Swift / Kotlin 与真实 Hub 的互通测试。
+CI（`.github/workflows/ci.yml`、`ios.yml`）会跑以上全部自动化测试，包括 Swift / Kotlin 与真实 Hub 的互通测试和 Android AAR 打包。
 
 ## 路线图
 
