@@ -42,7 +42,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - run: npm ci
       - name: Expo prebuild
-        run: npx expo prebuild --platform android --no-install
+        run: |
+          npx expo prebuild --platform android --no-install
+          # The template's 10 s wrapper download timeout is flaky on CI runners.
+          sed -i 's/^networkTimeout=.*/networkTimeout=120000/' android/gradle/wrapper/gradle-wrapper.properties
         working-directory: apps/${{ matrix.app }}
         env:
           CI: '1'
