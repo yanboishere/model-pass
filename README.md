@@ -85,7 +85,7 @@ ModelPass 是一个手机上的「模型钱包」。你把自己的 API Key（�
 需要 Node.js 22.13+（推荐 24），以及装有 [Expo Go](https://expo.dev/go)（SDK 58）的手机或 iOS 模拟器。
 
 ```bash
-git clone https://github.com/yanboishere/modelpass && cd modelpass
+git clone https://github.com/yanboishere/model-pass && cd model-pass
 npm install
 
 npm run hub        # ① Hub：http://localhost:8787（内置模拟上游 + 网页 Demo）
@@ -101,7 +101,7 @@ EXPO_PUBLIC_MODELPASS_WALLET_URL=exp://<你的局域网 IP>:8081/--/authorize np
 
 在 Demo Chat 中点「使用 ModelPass 继续」→ 在钱包里允许 → 回到 Demo Chat 开始对话。之后在钱包里切换模型，Demo Chat 立即生效。
 
-**Android 安装包**：在 [Releases](https://github.com/yanboishere/modelpass/releases) 下载 `ModelPass-Wallet` 与 `ModelPass-DemoChat` 两个 APK（由 `.github/workflows/android-release.yml` 自动构建），装好后在钱包里填写 `http://<电脑局域网 IP>:8787` 即可，不需要 Expo Go。
+**Android 安装包**：在 [Releases](https://github.com/yanboishere/model-pass/releases) 下载 `ModelPass-Wallet` 与 `ModelPass-DemoChat` 两个 APK（由 `.github/workflows/android-release.yml` 自动构建），装好后在钱包里填写 `http://<电脑局域网 IP>:8787` 即可，不需要 Expo Go。
 
 其他玩法：
 

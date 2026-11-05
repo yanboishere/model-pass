@@ -7,7 +7,7 @@ import { useTheme } from '../../src/theme'
 import { BUDGET_OPTIONS } from '../../src/lib/options'
 import { useWallet } from '../../src/wallet'
 
-const REPO = 'https://github.com/yanboishere/modelpass'
+const REPO = 'https://github.com/yanboishere/model-pass'
 
 
 export default function Settings() {

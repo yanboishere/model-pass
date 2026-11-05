@@ -5,7 +5,7 @@
     "verified": true,
     "icon": "💬",
     "description": "第三方应用接入示例：一个不需要填写任何 API Key 的聊天应用",
-    "homepage": "https://github.com/yanboishere/modelpass",
+    "homepage": "https://github.com/yanboishere/model-pass",
     "redirect_uris": ["modelpass-demochat://modelpass-callback", "exp://*/--/modelpass-callback"]
   },
   {
@@ -14,6 +14,6 @@
     "verified": true,
     "icon": "🌐",
     "description": "网页端扫码授权示例",
-    "homepage": "https://github.com/yanboishere/modelpass"
+    "homepage": "https://github.com/yanboishere/model-pass"
   }
 ]

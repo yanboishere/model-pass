@@ -1,6 +1,6 @@
 // swift-tools-version:5.9
 // Lets iOS apps depend on this repository directly with SwiftPM:
-//   .package(url: "https://github.com/yanboishere/modelpass", branch: "main")
+//   .package(url: "https://github.com/yanboishere/model-pass", branch: "main")
 // The sources live in sdks/ios (which is also a standalone package with tests).
 import PackageDescription
 

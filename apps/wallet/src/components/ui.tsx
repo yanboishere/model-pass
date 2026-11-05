@@ -1,6 +1,8 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -34,15 +36,24 @@ export function Screen({
 }) {
   const t = useTheme()
   const insets = useSafeAreaInsets()
-  return (
+  const scroll = (
     <ScrollView
       style={{ flex: 1, backgroundColor: t.bg }}
       contentContainerStyle={[{ padding: 16, paddingTop: padTop ? insets.top + 8 : 12, paddingBottom: 40, gap: 14 }, contentStyle]}
       refreshControl={onRefresh ? <RefreshControl refreshing={!!refreshing} onRefresh={onRefresh} tintColor={t.brand} /> : undefined}
       keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets
     >
       {children}
     </ScrollView>
+  )
+  // iOS adjusts the scroll insets natively; Android (edge-to-edge) no longer resizes the window for the keyboard.
+  return Platform.OS === 'android' ? (
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.bg }}>
+      {scroll}
+    </KeyboardAvoidingView>
+  ) : (
+    scroll
   )
 }
 
@@ -245,7 +256,7 @@ export function Segmented<T extends string | number | null>({ options, value, on
 
 export function ToggleRow({ title, subtitle, value, onValueChange, last }: { title: string; subtitle?: string; value: boolean; onValueChange: (v: boolean) => void; last?: boolean }) {
   const t = useTheme()
-  return <ListRow title={title} subtitle={subtitle} last={last} right={<Switch value={value} onValueChange={onValueChange} trackColor={{ true: t.brand, false: t.line }} />} />
+  return <ListRow title={title} subtitle={subtitle} last={last} right={<Switch value={value} onValueChange={onValueChange} trackColor={{ true: t.brand, false: t.line }} thumbColor={Platform.OS === 'android' ? '#FFFFFF' : undefined} />} />
 }
 
 export function Field({ label, hint, right, ...props }: TextInputProps & { label: string; hint?: string; right?: React.ReactNode }) {

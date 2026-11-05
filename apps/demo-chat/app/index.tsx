@@ -188,12 +188,13 @@ function Chat({ session }: { session: ModelPassSession }) {
     if (Platform.OS === 'ios') {
       ActionSheetIOS.showActionSheetWithOptions({ options: [...actions.map((a) => a.label), '取消'], cancelButtonIndex: actions.length, destructiveButtonIndex: 2 }, (i) => actions[i]?.run())
     } else {
-      Alert.alert('ModelPass', undefined, [...actions.map((a) => ({ text: a.label, onPress: a.run })), { text: '取消', style: 'cancel' as const }])
+      // Android alerts show at most three buttons; tapping outside dismisses.
+      Alert.alert('ModelPass', undefined, actions.map((a) => ({ text: a.label, onPress: a.run })), { cancelable: true })
     }
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior="padding">
       <View style={{ paddingTop: insets.top + 6, paddingHorizontal: 16, paddingBottom: 10, backgroundColor: t.card, borderBottomWidth: 0.5, borderBottomColor: t.line }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <LinearGradient colors={[t.accent, t.accent2]} style={{ width: 36, height: 36, borderRadius: 11, alignItems: 'center', justifyContent: 'center' }}>

@@ -46,16 +46,23 @@ jobs:
         working-directory: apps/${{ matrix.app }}
         env:
           CI: '1'
-      - name: Gradle assembleRelease
-        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a,x86_64
+      # Two builds: a small arm64-v8a APK (virtually every phone in use) and a universal one.
+      - name: Gradle assembleRelease (arm64-v8a)
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a
         working-directory: apps/${{ matrix.app }}/android
         env:
           # Optional: bake a default hub URL into the wallet (repository variable MODELPASS_HUB_URL).
           EXPO_PUBLIC_MODELPASS_HUB_URL: ${{ vars.MODELPASS_HUB_URL }}
-      - name: Collect APK
-        run: |
+      - run: |
           mkdir -p dist
-          cp apps/${{ matrix.app }}/android/app/build/outputs/apk/release/app-release.apk "dist/${{ matrix.name }}-${TAG}.apk"
+          cp apps/${{ matrix.app }}/android/app/build/outputs/apk/release/app-release.apk "dist/${{ matrix.name }}-${TAG}-arm64-v8a.apk"
+      - name: Gradle assembleRelease (universal)
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a,x86_64
+        working-directory: apps/${{ matrix.app }}/android
+        env:
+          EXPO_PUBLIC_MODELPASS_HUB_URL: ${{ vars.MODELPASS_HUB_URL }}
+      - run: |
+          cp apps/${{ matrix.app }}/android/app/build/outputs/apk/release/app-release.apk "dist/${{ matrix.name }}-${TAG}-universal.apk"
           ls -la dist
       - uses: actions/upload-artifact@v7
         with:

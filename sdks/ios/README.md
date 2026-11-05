@@ -48,8 +48,8 @@ targets: [
 **Git URL**：仓库根目录已提供指向本目录的 `Package.swift`，可以直接添加整个仓库：
 
 ```swift
-.package(url: "https://github.com/yanboishere/modelpass", branch: "main")
-// target 依赖：.product(name: "ModelPassSDK", package: "modelpass")
+.package(url: "https://github.com/yanboishere/model-pass", branch: "main")
+// target 依赖：.product(name: "ModelPassSDK", package: "model-pass")
 ```
 
 （在 Xcode 中：File → Add Package Dependencies… → 输入仓库地址。）

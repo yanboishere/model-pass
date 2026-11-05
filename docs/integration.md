@@ -56,7 +56,7 @@ for await (const text of modelpass.chat.streamText({ model: 'default', messages:
 ## 2. iOS（Swift，`ModelPassSDK`）
 
 ```swift
-// Package: .package(url: "https://github.com/yanboishere/modelpass", branch: "main")
+// Package: .package(url: "https://github.com/yanboishere/model-pass", branch: "main")
 @StateObject private var modelPass = ModelPass(configuration: .init(
     clientId: "com.example.chat",
     redirectURI: URL(string: "com.example.chat:/modelpass/callback")!,
