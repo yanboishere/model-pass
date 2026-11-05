@@ -10,12 +10,19 @@ import { ModelPassClient, type ModelPassSession, type ModelPassStorage } from '@
 export const WALLET_AUTHORIZE_URL = process.env.EXPO_PUBLIC_MODELPASS_WALLET_URL ?? 'modelpass://authorize'
 export const WALLET_BASE = WALLET_AUTHORIZE_URL.replace(/authorize\/?$/, '')
 
-/** Hub used as the rendezvous for "scan from another device". Production apps would use a hosted hub. */
+/**
+ * Hub used as the rendezvous for "scan from another device". Production apps would use a hosted hub;
+ * in development it is the machine running Metro. Standalone demo builds ask the user (see app/link.tsx).
+ */
 export function rendezvousHub(): string {
   if (process.env.EXPO_PUBLIC_MODELPASS_HUB_URL) return process.env.EXPO_PUBLIC_MODELPASS_HUB_URL
   const host = Constants.expoConfig?.hostUri?.split(':')[0]
-  return host ? `http://${host}:8787` : 'http://127.0.0.1:8787'
+  return host ? `http://${host}:8787` : ''
 }
+
+const HUB_KEY = 'mpdemo.rendezvous'
+export const loadSavedHub = () => SecureStore.getItemAsync(HUB_KEY)
+export const saveHub = (url: string) => SecureStore.setItemAsync(HUB_KEY, url)
 
 /** Where the wallet sends the user back. Expo Go: exp://<host>:8082/--/modelpass-callback */
 export const REDIRECT_URI = Linking.createURL('modelpass-callback')

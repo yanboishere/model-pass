@@ -1,0 +1,85 @@
+name: Android APK release
+
+# Builds standalone release APKs of both Expo apps and attaches them to a GitHub Release.
+# Triggered by pushing a tag like v0.1.0, or manually (Actions → Android APK release → Run workflow).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, e.g. v0.1.0 (created if missing)
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  TAG: ${{ github.event.inputs.tag || github.ref_name }}
+
+jobs:
+  apk:
+    name: APK · ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: wallet
+            name: ModelPass-Wallet
+          - app: demo-chat
+            name: ModelPass-DemoChat
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v6
+      - run: npm ci
+      - name: Expo prebuild
+        run: npx expo prebuild --platform android --no-install
+        working-directory: apps/${{ matrix.app }}
+        env:
+          CI: '1'
+      - name: Gradle assembleRelease
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a,x86_64
+        working-directory: apps/${{ matrix.app }}/android
+        env:
+          # Optional: bake a default hub URL into the wallet (repository variable MODELPASS_HUB_URL).
+          EXPO_PUBLIC_MODELPASS_HUB_URL: ${{ vars.MODELPASS_HUB_URL }}
+      - name: Collect APK
+        run: |
+          mkdir -p dist
+          cp apps/${{ matrix.app }}/android/app/build/outputs/apk/release/app-release.apk "dist/${{ matrix.name }}-${TAG}.apk"
+          ls -la dist
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.name }}
+          path: dist/*.apk
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: apk
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - run: cd dist && sha256sum *.apk > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "ModelPass $TAG（Android 演示版）" --notes-file .github/release-notes.md --target "$GITHUB_SHA"
+          fi

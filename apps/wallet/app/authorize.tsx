@@ -62,8 +62,10 @@ export default function Authorize() {
             icon="sparkles"
             loading={creating}
             onPress={async () => {
+              const hub = defaultHubUrl()
+              if (!hub) return router.push('/onboarding')
               setCreating(true)
-              await w.createWallet(defaultHubUrl()).catch((e) => Alert.alert('创建失败', (e as Error).message))
+              await w.createWallet(hub).catch((e) => Alert.alert('创建失败', (e as Error).message))
               setCreating(false)
             }}
           />

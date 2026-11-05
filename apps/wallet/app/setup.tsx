@@ -16,7 +16,8 @@ export default function Setup() {
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => pingHub(url).then(setStatus), 300)
+    if (!url.trim()) return setStatus(null)
+    const timer = setTimeout(() => pingHub(url.trim()).then(setStatus), 300)
     return () => clearTimeout(timer)
   }, [url])
 
@@ -47,6 +48,7 @@ export default function Setup() {
         value={url}
         onChangeText={setUrl}
         keyboardType="url"
+        placeholder="http://电脑的局域网 IP:8787"
         right={status ? <Ionicons name={status.ok ? 'checkmark-circle' : 'close-circle'} size={20} color={status.ok ? t.success : t.danger} /> : null}
       />
       {status ? <Notice tone={status.ok ? 'success' : 'danger'} icon={status.ok ? 'checkmark-circle' : 'close-circle'}>{status.message}</Notice> : null}

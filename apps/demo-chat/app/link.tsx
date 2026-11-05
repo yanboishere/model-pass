@@ -1,12 +1,12 @@
 // Cross-device authorization: show a QR code that the ModelPass wallet on another device scans.
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Linking, Pressable, Text, View } from 'react-native'
+import { ActivityIndicator, Linking, Pressable, Text, TextInput, View } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import type { LinkAuthorization, ModelPassError } from '@modelpass/sdk'
-import { modelpass, rendezvousHub, WALLET_BASE } from '../src/modelpass'
+import { loadSavedHub, modelpass, rendezvousHub, saveHub, WALLET_BASE } from '../src/modelpass'
 import { QRCode } from '../src/QRCode'
 import { useDemoTheme } from '../src/theme'
 
@@ -18,13 +18,21 @@ export default function LinkScreen() {
   const [left, setLeft] = useState(0)
   const [copied, setCopied] = useState(false)
   const [attempt, setAttempt] = useState(0)
+  // Which hub relays the QR handshake. Dev builds know it (Metro host); standalone builds ask once.
+  const [hub, setHub] = useState(rendezvousHub())
+  const [hubInput, setHubInput] = useState('')
 
   useEffect(() => {
+    if (!hub) loadSavedHub().then((saved) => saved && setHub(saved))
+  }, [])
+
+  useEffect(() => {
+    if (!hub) return
     let current: LinkAuthorization | null = null
     setError(null)
     setLink(null)
     modelpass
-      .startLink(rendezvousHub())
+      .startLink(hub)
       .then((l) => {
         current = l
         setLink(l)
@@ -36,7 +44,7 @@ export default function LinkScreen() {
         setError(e.code === 'access_denied' ? '对方在 ModelPass 中拒绝了授权。' : e.code === 'expired_token' ? '二维码已过期。' : e.message)
       })
     return () => current?.cancel()
-  }, [attempt])
+  }, [attempt, hub])
 
   useEffect(() => {
     if (!link) return
@@ -45,6 +53,38 @@ export default function LinkScreen() {
     const timer = setInterval(tick, 1000)
     return () => clearInterval(timer)
   }, [link])
+
+  if (!hub) {
+    const submit = () => {
+      const url = hubInput.trim().replace(/\/+$/, '')
+      if (!/^https?:\/\/[^/\s]+/.test(url)) return
+      saveHub(url)
+      setHub(url)
+    }
+    return (
+      <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: insets.top + 12, paddingHorizontal: 24, gap: 14 }}>
+        <Pressable onPress={() => router.back()} style={{ alignSelf: 'flex-end', padding: 6 }}>
+          <Ionicons name="close" size={26} color={t.muted} />
+        </Pressable>
+        <Text style={{ fontSize: 24, fontWeight: '800', color: t.ink }}>扫码授权</Text>
+        <Text style={{ fontSize: 15, color: t.muted, lineHeight: 22 }}>扫码授权需要一个 Hub 来中转握手（令牌全程端到端加密）。填写你的 Hub 地址，例如电脑上 npm run hub 打印的局域网地址。</Text>
+        <TextInput
+          value={hubInput}
+          onChangeText={setHubInput}
+          placeholder="http://192.168.1.10:8787"
+          placeholderTextColor={t.muted}
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="url"
+          onSubmitEditing={submit}
+          style={{ height: 48, borderRadius: 12, paddingHorizontal: 14, backgroundColor: t.card, color: t.ink, fontSize: 16, borderWidth: 1, borderColor: t.line }}
+        />
+        <Pressable onPress={submit} style={{ height: 50, borderRadius: 14, backgroundColor: t.accent, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>生成二维码</Text>
+        </Pressable>
+      </View>
+    )
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: insets.top + 12, paddingHorizontal: 24 }}>
@@ -85,6 +125,9 @@ export default function LinkScreen() {
             </Pressable>
           </>
         ) : null}
+        <Pressable onPress={() => setHub('')}>
+          <Text style={{ fontSize: 12, color: t.muted }}>经由 {hub.replace(/^https?:\/\//, '')} · 更换 Hub</Text>
+        </Pressable>
         <Text style={{ fontSize: 12, color: t.muted, textAlign: 'center', marginTop: 12, lineHeight: 18 }}>
           二维码中包含一次性密钥，授权结果经端到端加密传回本设备，{'\n'}中转的 Hub 无法读取或伪造。
         </Text>

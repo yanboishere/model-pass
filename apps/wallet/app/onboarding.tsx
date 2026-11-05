@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Ionicons } from '@expo/vector-icons'
@@ -24,21 +24,28 @@ export default function Onboarding() {
   const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null)
   const [busy, setBusy] = useState(false)
 
+  const created = useRef(false)
+
   useEffect(() => {
-    if (identity) router.replace('/')
+    if (identity && !created.current) router.replace('/')
   }, [identity])
 
   useEffect(() => {
-    const timer = setTimeout(() => pingHub(hubUrl).then(setStatus), 400)
+    if (!hubUrl.trim()) return setStatus(null)
+    const timer = setTimeout(() => pingHub(hubUrl.trim()).then(setStatus), 400)
     return () => clearTimeout(timer)
   }, [hubUrl])
 
   const create = async () => {
     setBusy(true)
     try {
-      await createWallet(hubUrl.trim())
-      router.replace('/')
+      created.current = true
+      await createWallet(hubUrl.trim().replace(/\/+$/, ''))
+      // Opened from a consent screen (e.g. an app asked for access before the wallet existed)? Go back to it.
+      if (router.canGoBack()) router.back()
+      else router.replace('/')
     } catch (e) {
+      created.current = false
       setStatus({ ok: false, message: (e as Error).message })
     } finally {
       setBusy(false)
@@ -74,13 +81,18 @@ export default function Onboarding() {
             value={hubUrl}
             onChangeText={setHubUrl}
             keyboardType="url"
-            hint="Hub 负责签发授权并转发模型请求，可以使用官方 Hub 或自行部署（npm run hub）。"
+            placeholder="http://电脑的局域网 IP:8787"
+            hint={
+              hubUrl.trim()
+                ? 'Hub 负责签发授权并转发模型请求，可以使用官方 Hub 或自行部署（npm run hub）。'
+                : '在电脑上运行 npm run hub，填写它打印的局域网地址（手机与电脑需在同一 Wi-Fi）。'
+            }
             right={status ? <Ionicons name={status.ok ? 'checkmark-circle' : 'close-circle'} size={20} color={status.ok ? t.success : t.danger} /> : null}
           />
           {status && !status.ok ? <Notice tone="danger">{status.message}</Notice> : null}
-          <Button title="创建我的钱包" size="lg" icon="sparkles" loading={busy} onPress={create} />
+          <Button title="创建我的钱包" size="lg" icon="sparkles" loading={busy} disabled={!hubUrl.trim()} onPress={create} />
           <Text style={{ fontSize: 12.5, color: t.faint, textAlign: 'center', lineHeight: 18 }}>
-            Vault Key 将在本机生成，仅保存在系统钥匙串中（不随 iCloud 同步）。{'\n'}Hub 上只保存经它加密的密文。
+            Vault Key 将在本机生成，仅保存在{Platform.OS === 'ios' ? '系统钥匙串中（不随 iCloud 同步）' : ' Android Keystore 保护的加密存储中'}。{'\n'}Hub 上只保存经它加密的密文。
           </Text>
         </View>
       </ScrollView>
