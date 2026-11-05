@@ -134,8 +134,8 @@ Package.swift         让 iOS 项目可以直接以 SwiftPM 依赖本仓库
 | JS SDK | 回调 / state / issuer 校验单测，并在 Hub 端到端测试中作为客户端 | ✅ |
 | iOS Swift SDK | `swift test` 81 项 + iOS 模拟器构建 + 对真实 Hub 的互通测试（同设备授权、流式、CJK 响应头、撤销、扫码） | ✅ |
 | Android Kotlin SDK | JVM 单测 53 项 + 对真实 Hub 的 2 项互通测试；Android 库（AAR）由 CI 用 AGP 9.5 实际打包通过 | ✅ |
-| 两个 App | 类型检查 + iOS / Android 的 Metro 打包；在 iOS 模拟器中实际跑通：引导、演示模型、跨应用授权、流式对话、一键切换、扫码授权（网页 WebCrypto 解密）、重置钱包会撤销所有授权 | ✅ |
-| 未验证 | Android 真机 / 模拟器上运行（本机没有 Android SDK）；真实厂商 API（仅用模拟上游，但请求格式就是各家的标准 API）；ChatGPT 与 OpenRouter 账户授权的真实账户流程 | ⚠️ |
+| 两个 App | 类型检查 + iOS / Android 的 Metro 打包；在 iOS 模拟器中实际跑通：引导、演示模型、跨应用授权、流式对话、一键切换、扫码授权（网页 WebCrypto 解密）、重置钱包会撤销所有授权；Releases 中的 APK 在 Android 15 模拟器上跑通：引导、局域网 Hub、演示模型、跨应用授权、流式对话、键盘避让、授权详情与深链 | ✅ |
+| 未验证 | Android 真机；真实厂商 API（仅用模拟上游，但请求格式就是各家的标准 API）；ChatGPT 与 OpenRouter 账户授权的真实账户流程 | ⚠️ |
 
 CI（`.github/workflows/ci.yml`、`ios.yml`）会跑以上全部自动化测试，包括 Swift / Kotlin 与真实 Hub 的互通测试和 Android AAR 打包。
 
